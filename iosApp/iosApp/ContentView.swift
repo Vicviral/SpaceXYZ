@@ -2,10 +2,10 @@ import SwiftUI
 import shared
 
 struct ContentView: View {
-	let greet = APIClient().greet()
+	let lastLaunch = APIClient().showLastRocketLaunch()
 
 	var body: some View {
-		Text(greet)
+		Text(lastLaunch)
 	}
 }
 
