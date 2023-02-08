@@ -5,10 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.victorloveday.spacexyz.APIClient
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,19 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(APIClient().showLastRocketLaunch())
+                    val scope = rememberCoroutineScope()
+                    var message by remember { mutableStateOf("Loading") }
+                    LaunchedEffect(true) {
+                        scope.launch {
+                            message = try {
+                                APIClient().showLastRocketLaunch()
+                            }catch (e: Exception) {
+                                e.localizedMessage ?: "errot"
+                            }
+                        }
+                    }
+
+                    GreetingView(message)
                 }
             }
         }
